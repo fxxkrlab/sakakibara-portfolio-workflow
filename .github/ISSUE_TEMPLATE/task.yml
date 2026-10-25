@@ -1,0 +1,30 @@
+name: Workflow task or bug
+description: Define scope, acceptance and evidence before implementation
+title: "[Workflow] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal or problem
+      description: Describe the trigger, expected result and affected scope. Do not include private data.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use individual checkboxes and define evidence for each condition.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and source links
+      description: Link exact public issues; keep private operational associations in controlled tracking.
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation, risks and next step
+      description: State the designated environment, required checks, authorization boundaries and next action.
+    validations:
+      required: true
