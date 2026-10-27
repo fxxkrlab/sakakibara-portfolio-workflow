@@ -5,9 +5,9 @@ permissions:
   contents: read
 jobs:
   verify:
-    if: vars.PORTFOLIO_CI_ENABLED == 'true'
+    if: vars.PORTFOLIO_CI_ENABLED == 'true' && vars.PORTFOLIO_RUNNER_LABELS != ''
     environment: workflow-validation
-    runs-on: [self-hosted, Linux, X64, portfolio-ci, portfolio-container]
+    runs-on: ${{ fromJSON(vars.PORTFOLIO_RUNNER_LABELS) }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -23,8 +23,8 @@ jobs:
           test "$(id -u)" != 0
           test ! -S /var/run/docker.sock
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-          test -x /opt/github-runners/hooks/job-started.sh
-          test -x /opt/github-runners/hooks/job-completed.sh
+          test -x "${ACTIONS_RUNNER_HOOK_JOB_STARTED:?job-started hook not configured}"
+          test -x "${ACTIONS_RUNNER_HOOK_JOB_COMPLETED:?job-completed hook not configured}"
       - name: Run tests and publication checks
         run: |
           set -euo pipefail
