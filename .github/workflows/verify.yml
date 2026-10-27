@@ -1,0 +1,37 @@
+name: Manual workflow validation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: vars.PORTFOLIO_CI_ENABLED == 'true' && vars.PORTFOLIO_RUNNER_LABELS != ''
+    environment: workflow-validation
+    runs-on: ${{ fromJSON(vars.PORTFOLIO_RUNNER_LABELS) }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Validate exact source and isolation
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(id -u)" != 0
+          test ! -S /var/run/docker.sock
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          test -x "${ACTIONS_RUNNER_HOOK_JOB_STARTED:?job-started hook not configured}"
+          test -x "${ACTIONS_RUNNER_HOOK_JOB_COMPLETED:?job-completed hook not configured}"
+      - name: Run tests and publication checks
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v
+          python3 scripts/demo.py
+          python3 scripts/check_publication.py --history
+      - name: Report validation scope
+        if: always()
+        run: |
+          printf 'Validation only; runner recovery must verify job cleanup. No deployment or acceptance is implied.\n'

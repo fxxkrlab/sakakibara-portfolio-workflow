@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "example_only": true,
+  "project_id": "PVT_REPLACE_WITH_YOUR_PROJECT_ID",
+  "project_url": "https://github.com/orgs/example-org/projects/1",
+  "linear_team": "ENG",
+  "linear_default_project": "Engineering Portfolio",
+  "allowed_owner": "example-maintainer",
+  "excluded_repos": [],
+  "repositories": [
+    {"repo": "example-org/service-api", "project": "Service API", "mirror_mode": "native"},
+    {"repo": "example-org/client-app", "project": "Client App", "mirror_mode": "linked"}
+  ],
+  "phase_mapping": {
+    "backlog": {"linear": "Backlog", "github": "待整理"},
+    "todo": {"linear": "Todo", "github": "待开发"},
+    "development": {"linear": "In Progress", "github": "开发中"},
+    "review": {"linear": "In Review", "github": "待审核"},
+    "merge_pending": {"linear": "In Review", "github": "待合并"},
+    "deployment_pending": {"linear": "待部署", "github": "待部署"},
+    "acceptance_pending": {"linear": "待验收", "github": "待验收"},
+    "blocked": {"linear": "阻塞", "github": "阻塞"},
+    "accepted": {"linear": "Done", "github": "完成"}
+  }
+}
